@@ -24,3 +24,5 @@ go.work
 .vscode
 *.code-workspace
 ```
+#Mac OS
+.DS_store
