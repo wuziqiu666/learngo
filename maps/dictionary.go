@@ -1,7 +1,5 @@
 package maps
 
-import "fmt"
-
 const (
 	ErrNotFound         = DictionaryErr("could not find the word your were looking for")
 	ErrWordExists       = DictionaryErr("cannot add words because it already exists")
@@ -52,5 +50,4 @@ func (d Dictionary) Update(word, definition string) error {
 
 func (d Dictionary) Delete(word string) {
 	delete(d, word)
-	fmt.Printf()
 }
