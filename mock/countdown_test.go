@@ -1,4 +1,4 @@
-package mocking
+package main
 
 import (
 	"bytes"
@@ -46,4 +46,25 @@ func TestConfigurableSleeper(t *testing.T) {
 	if spyTime.durationSlept != sleepTime {
 		t.Errorf("should have seplt for %v but seplt for %v", sleepTime, spyTime.durationSlept)
 	}
+}
+
+type SpyCountdownOpreation struct {
+	Calls []string
+}
+
+func (s *SpyCountdownOpreation) Sleep() {
+	s.Calls = append(s.Calls, sleep)
+}
+
+func (s *SpyCountdownOpreation) Write(p []byte) (n int, err error) {
+	s.Calls = append(s.Calls, write)
+	return
+}
+
+type SpyTime struct {
+	durationSlept time.Duration
+}
+
+func (s *SpyTime) Sleep(duration time.Duration) {
+	s.durationSlept = duration
 }

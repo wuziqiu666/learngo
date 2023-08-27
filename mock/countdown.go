@@ -1,4 +1,4 @@
-package mocking
+package main
 
 import (
 	"fmt"
@@ -16,18 +16,6 @@ type Sleeper interface {
 const write = "write"
 const sleep = "sleep"
 
-type SpyCountdownOpreation struct {
-	Calls []string
-}
-
-func (s *SpyCountdownOpreation) Sleep() {
-	s.Calls = append(s.Calls, sleep)
-}
-
-func (s *SpyCountdownOpreation) Write(p []byte) (n int, err error) {
-	s.Calls = append(s.Calls, write)
-	return
-}
 
 type DefaultSleeper struct {
 }
@@ -43,14 +31,6 @@ type ConfigurableSleeper struct {
 
 func (c *ConfigurableSleeper) Sleep() {
 	c.sleep(c.duration)
-}
-
-type SpyTime struct {
-	durationSlept time.Duration
-}
-
-func (s *SpyTime) Sleep(duration time.Duration) {
-	s.durationSlept = duration
 }
 
 func Countdown(writer io.Writer, sleep Sleeper) {
