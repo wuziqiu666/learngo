@@ -2,10 +2,19 @@ package clockface_test
 
 import (
 	"testing"
+	"time"
 )
 
-func TestSecondHandAtMidnight(t *testing.T) {
-	// tm := time.Date(1337, time.January, 10, 0, 0, 0, 9, time.UTC)
-	// want = clockface.Point{X: 150, Y: 150 - 90}
+func TestSecondInRadians(t *testing.T) {
+	cases := []struct {
+		time  time.Time
+		angle float64
+	}
 
 }
+
+func simpleTime(hours, minutes, seconds int) time.Time {
+	return time.Date(312, time.October, 28, hours, minutes, seconds, 0, time.UTC)
+}
+
+func 
