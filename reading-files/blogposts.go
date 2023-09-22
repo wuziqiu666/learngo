@@ -2,18 +2,19 @@ package blogposts
 
 import (
 	"io/fs"
-	"log"
 )
 
-type post struct {
+type Post struct {
 }
 
-func NewPostsFromFs(fileSystem fs.FS) []post {
-	dir, _ := fs.ReadDir(fileSystem, ".")
-	var posts []post
-	for range dir {
-		log.Print(dir)
-		posts = append(posts, post{})
+func NewPostsFromFs(fileSystem fs.FS) ([]Post, error) {
+	dir, err := fs.ReadDir(fileSystem, ".")
+	if err != nil {
+		return nil, err
 	}
-	return posts
+	var posts []Post
+	for range dir {
+		posts = append(posts, Post{})
+	}
+	return posts, nil
 }

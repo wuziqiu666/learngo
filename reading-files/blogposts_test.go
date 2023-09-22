@@ -12,8 +12,21 @@ func TestNewBlogPosts(t *testing.T) {
 		"hello world.md": {Data: []byte("hi")},
 		"hello-world.md": {Data: []byte("hola")},
 	}
-	posts := blogposts.NewPostsFromFs(fs)
-	if len(posts) != len(fs) {
+	posts, err := blogposts.NewPostsFromFs(fs)
+	assertNoError(t, err)
+	assertPostsLength(t, posts, fs)
+}
+
+func assertNoError(t *testing.T, err error) {
+	t.Helper()
+	if err != nil {
+		t.Fatal(err)
+	}
+}
+
+func assertPostsLength(t *testing.T, posts []blogposts.Post, fs fstest.MapFS){
+	t.Helper()
+	if len(posts) != len(fs){
 		t.Errorf("got %d posts, wanted %d posts", len(posts), len(fs))
 	}
 }
