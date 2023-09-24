@@ -12,9 +12,12 @@ import (
 func TestRender(t *testing.T) {
 	aPost := blogrenderer.Post{
 		Title:       "hello world",
-		Body:        "This is a post",
 		Description: "This is a description",
 		Tags:        []string{"go", "tdd"},
+		Body: `# Head 1
+## Head 2
+good morning
+		`,
 	}
 	postRenderer, err := blogrenderer.NewPostRenderer()
 	if err != nil {
@@ -26,6 +29,21 @@ func TestRender(t *testing.T) {
 			t.Fatal(err)
 		}
 		approvals.VerifyString(t, buf.String())
+	})
+	t.Run("it render an index of posts", func(t *testing.T) {
+		buf := bytes.Buffer{}
+		posts := []blogrenderer.Post{
+			{Title: "Hello World"},
+			{Title: "Hello World 2"},
+		}
+		if err := postRenderer.RenderIndex(&buf, posts); err != nil {
+			t.Fatal(err)
+		}
+		got := buf.String()
+		want := `<ol><li><a href="/post/hello-world">Hello World</a></li><li><a href="/post/hello-world-2">Hello World 2</a></li></ol>`
+		if got != want {
+			t.Errorf("got %q want %q", got, want)
+		}
 	})
 }
 

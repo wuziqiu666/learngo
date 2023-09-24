@@ -4,6 +4,7 @@ import (
 	"embed"
 	"html/template"
 	"io"
+	"strings"
 
 	"github.com/gomarkdown/markdown"
 	"github.com/gomarkdown/markdown/html"
@@ -44,14 +45,30 @@ func (r *PostRenderer) Render(w io.Writer, post Post) error {
 	return nil
 }
 
+func (r *PostRenderer) RenderIndex(w io.Writer, posts []Post) error {
+	indexTemplate := `<ol>{{range .}}<li><a href="/post/{{sanitiseTitle .Title}}">{{.Title}}</a></li>{{end}}</ol>`
+	templ, err := template.New("index").Funcs(template.FuncMap{
+		"sanitiseTitle": func(title string) string {
+			return strings.ToLower(strings.ReplaceAll(title, " ", "-"))
+		},
+	}).Parse(indexTemplate)
+	if err != nil {
+		return err
+	}
+	if err := templ.Execute(w, posts); err != nil {
+		return err
+	}
+	return nil
+}
+
 type postViewModel struct {
-	post     Post
+	Post
 	HTMLBody template.HTML
 }
 
 func newPostViewModel(post Post, r *PostRenderer) *postViewModel {
 	var vm postViewModel
-	vm.post = post
+	vm.Post = post
 	vm.HTMLBody = template.HTML(ConfigMarkDownRender(r.extensions, r.htmlFlags)([]byte(post.Body)))
 	return &vm
 }
