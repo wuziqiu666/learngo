@@ -2,11 +2,10 @@ package arraysandslices
 
 // Sum returns the sum of the numbers
 func Sum(numbers []int) int {
-	var sum int
-	for _, number := range numbers {
-		sum += number
+	add := func(acc, x int) int {
+		return acc + x
 	}
-	return sum
+	return Reduce[int](numbers, add, 0)
 }
 
 func SumAll(numbersToSum ...[]int) []int {
@@ -18,14 +17,22 @@ func SumAll(numbersToSum ...[]int) []int {
 }
 
 func SumAllTails(numbersToSum ...[]int) []int {
-	var sums []int
-	for _, numbers := range numbersToSum {
-		if len(numbers) == 0 {
-			sums = append(sums, 0)
+	sumTails := func(acc, x []int) []int {
+		if len(x) == 0 {
+			acc = append(acc, 0)
 		} else {
-			numbers = numbers[1:]
-			sums = append(sums, Sum(numbers))
+			x := x[1:]
+			acc = append(acc, Sum(x))
 		}
+		return acc
 	}
-	return sums
+	return Reduce[[]int](numbersToSum, sumTails, []int{})
+}
+
+func Reduce[T any](collection []T, accumulator func(T, T) T, initialValue T) T {
+	result := initialValue
+	for _, x := range collection {
+		result = accumulator(result, x)
+	}
+	return result
 }
